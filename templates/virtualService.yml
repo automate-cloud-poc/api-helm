@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: api-hello
+  namespace: api
+spec:
+  hosts:
+    - '*'
+  gateways:
+    - istio-system/my-gateway
+  http:
+    - match:
+      - uri:
+          prefix: "/hello"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            port:
+              number: 1323
+            host: "{{ .Values.name }}.api.svc.cluster.local"

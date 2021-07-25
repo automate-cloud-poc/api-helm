@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "api-helm.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
