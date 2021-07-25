@@ -6,9 +6,7 @@ metadata:
   labels:
     {{- include "api-helm.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.deploy.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "api-helm.selectorLabels" . | nindent 6 }}
