@@ -1,21 +1,26 @@
+{{- range $service := .Values.gateway.services }}
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: api-hello
+  name: {{ .Values.name }}
   namespace: api
 spec:
   hosts:
     - '*'
   gateways:
-    - istio-system/my-gateway
+    - istio-system/main-gateway
   http:
+    {{- range route := $service.routes }}
     - match:
       - uri:
-          prefix: "/hello"
+          prefix: "/{{ $service.name }}/{{ $route.path }}"
       rewrite:
         uri: "/"
       route:
         - destination:
             port:
-              number: 1323
+              number: {{ .Values.service.port }}
             host: "{{ .Values.name }}.api.svc.cluster.local"
+  {{- end }}
+{{- end }}
