@@ -11,7 +11,7 @@ spec:
   gateways:
     - istio-system/main-gateway
   http:
-    {{- range route := $service.routes }}
+    {{- range $route, $val := $service.routes }}
     - match:
       - uri:
           prefix: "/{{ $service.name }}/{{ $route.path }}"
