@@ -1,4 +1,5 @@
-
+{{- $svcPort := .Values.service.port -}}
+{{- $name := .Values.name -}}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -19,6 +20,6 @@ spec:
       route:
         - destination:
             port:
-              number: {{ .Values.service.port }}
-            host: "{{ .Values.name }}.api.svc.cluster.local"
+              number: {{ $svcPort }}
+            host: "{{ $name }}.api.svc.cluster.local"
   {{- end }}
