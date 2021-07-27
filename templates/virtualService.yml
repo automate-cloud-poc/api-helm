@@ -10,10 +10,10 @@ spec:
   gateways:
     - istio-system/main-gateway
   http:
-    {{- range $route := .Values.gateway.routes }}
+    {{- range .Values.gateway.routes }}
     - match:
       - uri:
-          prefix: "{{ $route.path }}"
+          prefix: "{{ .path }}"
       rewrite:
         uri: "/"
       route:
