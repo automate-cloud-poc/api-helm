@@ -1,9 +1,34 @@
+{{- if .Values.gateway }}
+
 {{- $svcPort := .Values.service.port -}}
 {{- $name := .Values.name -}}
+
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ .Values.name }}
+  name: "internal-{{ .Values.name }}"
+  namespace: api
+spec:
+  hosts:
+    - "{{ $name }}.api.svc.cluster.local"
+  gateways:
+    - istio-system/main-gateway
+  http:
+    {{- range .Values.gateway.routes }}
+    - match:
+        - uri:
+            prefix: "{{ .path }}"
+      route:
+        - destination:
+            port:
+              number: {{ $svcPort }}
+            host: "{{ $name }}.api.svc.cluster.local"
+  {{- end }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: "external-{{ .Values.name }}"
   namespace: api
 spec:
   hosts:
@@ -16,10 +41,16 @@ spec:
       - uri:
           prefix: "{{ .path }}"
       rewrite:
-        uri: "/"
+        authority: "{{ $name }}.api.svc.cluster.local"
       route:
         - destination:
             port:
               number: {{ $svcPort }}
+          {{- if .auth }}
+            host: "{{ .auth }}.api.svc.cluster.local"
+          {{- else }}
             host: "{{ $name }}.api.svc.cluster.local"
+          {{- end }}
   {{- end }}
+
+{{- end }}
