@@ -17,7 +17,7 @@ spec:
     {{- range .Values.gateway.routes }}
     - match:
         - uri:
-            prefix: "{{ .path }}"
+            exact: "{{ .path }}"
       route:
         - destination:
             port:
@@ -39,7 +39,7 @@ spec:
     {{- range .Values.gateway.routes }}
     - match:
       - uri:
-          prefix: "{{ .path }}"
+          exact: "{{ .path }}"
       rewrite:
         authority: "{{ $name }}.api.svc.cluster.local"
       route:
