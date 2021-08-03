@@ -12,7 +12,7 @@ spec:
   hosts:
     - "{{ $name }}.api.svc.cluster.local"
   gateways:
-    - istio-system/main-gateway
+    - gateway/internal-ingress
   http:
     {{- range .Values.gateway.routes }}
     - match:
@@ -34,7 +34,7 @@ spec:
   hosts:
     - '*'
   gateways:
-    - istio-system/main-gateway
+    - gateway/edge-ingress
   http:
     {{- range .Values.gateway.routes }}
     - match:
